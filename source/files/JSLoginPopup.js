@@ -15,6 +15,11 @@ function showLoginPopup(url) {
 	div.className = "content";
 	div.redirectURL = url;
 
+	var form = document.createElement("form");
+	form.setAttribute("method", "post");
+	form.setAttribute("action", "/login?"+"&url="+url+"&timeStamp="+new Date().getTime());
+	form.setAttribute("id", "loginForm");
+	
 	var center = document.createElement("CENTER");
 
 	var table = document.createElement("TABLE");
@@ -23,8 +28,9 @@ function showLoginPopup(url) {
 	tbody.appendChild(getLoginRow("Password:", "password", "password"));
 	table.appendChild(tbody);
 	center.appendChild(table);
-
-	div.appendChild(center);
+	
+	form.appendChild(center);
+	div.appendChild(form);
 
 	showDialog(id, w, h, "Login", closebox, "Login", div, loginPopupOK, null);
 	document.getElementById("username").focus();
@@ -63,15 +69,10 @@ function loginKeyDown(event) {
 }
 
 function loginPopupOK() {
-	var username = document.getElementById("username").value;
-	var password = document.getElementById("password").value;
-	var url = document.getElementById("loginPopupContentID").redirectURL;
-
-	var qs = "username="+username+"&password="+password+"&url="+url+"&timeStamp="+new Date().getTime();
-	openURL("/login?"+qs, "_self");
+	var form  = document.getElementById('loginForm');
+	form.submit();
 }
 
 function logout(url) {
 	openURL("/login?logout=true&url="+url, "_self");
 }
-
